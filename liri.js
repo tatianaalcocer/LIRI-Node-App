@@ -7,7 +7,6 @@ var Twitter = require('twitter');
 var keys = require('./key.js');
 
 
-
 var command = process.argv[2];
 var specific = process.argv[3];
 
@@ -26,13 +25,57 @@ switch(command){
     break;
 
     case 'do-what-it-says':
-        itSaysNobody();
+        itSaysWhat();
     break;
 }
 // Twitter Request ========================================================
 // This will show your last 20 tweets and when they were created at in your 
 // terminal/bash window.
 
+function twitter() {
+
+	var twitterClient = new Twitter(keys.twitterKeys);
+
+	// twitterClient.get(path, params, callback);
+
+	var params = {
+		screen_name: 'DevinUnlimited',
+		count: 20,
+		exclude_replies: true
+	};
+
+	twitterClient.get('statuses/user_timeline', params, function(error, tweets, response) {
+		if(error) throw error;
+
+		console.log("TWEETS");
+		for(var i in tweets) {
+			console.log(tweets[i].text);
+		}
+
+		var twitterUrl = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=DevinUnlimited&count=20&exclude_replies=true'
+		// console.log(tweets);  
+		// console.log(response);  // Raw response object. 
+
+	});
+
+	twitterClient.get('https://api.twitter.com/1.1/statuses/user_timeline.json', 'screen_name=DevinUnlimited&count=20&exclude_replies=true', function(response) {
+		console.log(response)
+	});
+}
+
+
+// Spotify Request ========================================================
+// node liri.js spotify-this-song '<song name here>'
+
+// This will show the following information about the song in your terminal/bash 
+// window
+
+// Artist(s)
+// The song's name
+// A preview link of the song from Spotify
+// The album that the song is from
+// if no song is provided then your program will default to
+// "The Sign" by Ace of Base
 
 
 
@@ -74,6 +117,15 @@ function omdb() {
 
 }
 
+// Do What It Says =============================================================
+// node liri.js do-what-it-says
+
+// Using the fs Node package, LIRI will take the text inside of random.txt 
+// and then use it to call one of LIRI's commands.
+// It should run spotify-this-song for "I Want it That Way," as follows the text 
+// in random.txt.
+// Feel free to change the text in that document to test out the feature for 
+// other commands.
 
 
 
